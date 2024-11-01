@@ -23,8 +23,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "start": "NODE_OPTIONS='--openssl-legacy-provider' react-scripts start",
-    "build": "react-scripts build",
+    "start": "next start",
+    "build": "next build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
