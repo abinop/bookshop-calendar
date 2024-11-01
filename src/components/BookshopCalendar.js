@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, ArrowLeft, ArrowRight, Plus, X, Edit2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
+import { eventService } from '../services/eventService';
 
 const BookshopCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -20,6 +21,26 @@ const BookshopCalendar = () => {
     description: '',
     date: ''
   });
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      setIsLoading(true);
+      const fetchedEvents = await eventService.getAllEvents();
+      setEvents(fetchedEvents);
+    } catch (err) {
+      setError('Failed to fetch events');
+      console.error('Error fetching events:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const daysInMonth = new Date(
     currentDate.getFullYear(),
@@ -56,11 +77,16 @@ const BookshopCalendar = () => {
     return events.filter(event => event.date === date);
   };
 
-  const handleAddEvent = () => {
-    const newId = Math.max(...events.map(e => e.id), 0) + 1;
-    setEvents([...events, { ...newEvent, id: newId }]);
-    setNewEvent({ title: '', description: '', date: '' });
-    setIsDialogOpen(false);
+  const handleAddEvent = async () => {
+    try {
+      const createdEvent = await eventService.createEvent(newEvent);
+      setEvents([...events, createdEvent]);
+      setNewEvent({ title: '', description: '', date: '' });
+      setIsDialogOpen(false);
+    } catch (err) {
+      setError('Failed to create event');
+      console.error('Error creating event:', err);
+    }
   };
 
   const handleEditEvent = (event) => {
@@ -69,15 +95,27 @@ const BookshopCalendar = () => {
     setIsDialogOpen(true);
   };
 
-  const handleUpdateEvent = () => {
-    setEvents(events.map(e => e.id === editingEvent.id ? { ...newEvent, id: e.id } : e));
-    setNewEvent({ title: '', description: '', date: '' });
-    setEditingEvent(null);
-    setIsDialogOpen(false);
+  const handleUpdateEvent = async () => {
+    try {
+      const updatedEvent = await eventService.updateEvent(editingEvent.id, newEvent);
+      setEvents(events.map(e => e.id === editingEvent.id ? updatedEvent : e));
+      setNewEvent({ title: '', description: '', date: '' });
+      setEditingEvent(null);
+      setIsDialogOpen(false);
+    } catch (err) {
+      setError('Failed to update event');
+      console.error('Error updating event:', err);
+    }
   };
 
-  const handleDeleteEvent = (eventId) => {
-    setEvents(events.filter(e => e.id !== eventId));
+  const handleDeleteEvent = async (eventId) => {
+    try {
+      await eventService.deleteEvent(eventId);
+      setEvents(events.filter(e => e.id !== eventId));
+    } catch (err) {
+      setError('Failed to delete event');
+      console.error('Error deleting event:', err);
+    }
   };
 
   const openNewEventDialog = (date) => {
@@ -133,6 +171,27 @@ const BookshopCalendar = () => {
           </div>
         ))}
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="w-full max-w-4xl">
+        <CardContent className="p-6">
+          <div className="text-red-500">{error}</div>
+          <Button onClick={() => setError(null)} className="mt-2">Dismiss</Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Card className="w-full max-w-4xl">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-center">Loading...</div>
+        </CardContent>
+      </Card>
     );
   }
 
