@@ -1,8 +1,7 @@
-import clientPromise from '../db/connect';
+import clientPromise from '../../lib/mongodb';
 import { ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
-  // Add CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
@@ -11,7 +10,6 @@ export default async function handler(req, res) {
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
-  // Handle OPTIONS request for CORS preflight
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
@@ -53,4 +51,4 @@ export default async function handler(req, res) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-} 
+}
