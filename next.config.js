@@ -6,7 +6,5 @@ module.exports = {
         destination: '/api/:path*',
       },
     ]
-  },
-  distDir: 'build',
-  output: 'standalone'
+  }
 } 
