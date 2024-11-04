@@ -26,7 +26,7 @@ export default function AdminEvents() {
   };
 
   const handleDelete = async (eventId) => {
-    if (confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την εκδήλωση;')) {
+    if (window.confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την εκδήλωση;')) {
       try {
         const response = await fetch(`/api/events/${eventId}`, {
           method: 'DELETE',
