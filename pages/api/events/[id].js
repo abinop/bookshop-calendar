@@ -1,54 +1,60 @@
-import clientPromise from '../../../lib/mongodb.js';
 import { ObjectId } from 'mongodb';
+import clientPromise from '../../../lib/mongodb';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+  const { method } = req;
+  const { id } = req.query;
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+  const client = await clientPromise;
+  const db = client.db("bookshop");
 
-  try {
-    const client = await clientPromise;
-    const db = client.db("bookshop");
-    const collection = db.collection("events");
-    const { id } = req.query;
+  switch (method) {
+    case 'GET':
+      try {
+        const event = await db.collection('events').findOne({ 
+          _id: new ObjectId(id)
+        });
+        
+        if (!event) {
+          return res.status(404).json({ message: 'Event not found' });
+        }
 
-    switch (req.method) {
-      case 'PUT':
-        const updateData = req.body;
-        const updateResult = await collection.findOneAndUpdate(
+        res.status(200).json(event);
+      } catch (error) {
+        res.status(500).json({ message: 'Error fetching event' });
+      }
+      break;
+
+    case 'PUT':
+      try {
+        const { title, description, start, end } = req.body;
+        
+        const updateData = {
+          title,
+          description,
+          start: new Date(start),
+          end: new Date(end),
+          updatedAt: new Date()
+        };
+
+        const result = await db.collection('events').updateOne(
           { _id: new ObjectId(id) },
-          { $set: updateData },
-          { returnDocument: 'after' }
+          { $set: updateData }
         );
-        if (!updateResult.value) {
-          return res.status(404).json({ error: 'Event not found' });
-        }
-        res.status(200).json(updateResult.value);
-        break;
 
-      case 'DELETE':
-        const deleteResult = await collection.deleteOne({ _id: new ObjectId(id) });
-        if (deleteResult.deletedCount === 0) {
-          return res.status(404).json({ error: 'Event not found' });
+        if (result.modifiedCount === 0) {
+          return res.status(404).json({ message: 'Event not found' });
         }
-        res.status(200).json({ message: 'Event deleted successfully' });
-        break;
 
-      default:
-        res.setHeader('Allow', ['PUT', 'DELETE']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+        res.status(200).json({ message: 'Event updated successfully' });
+      } catch (error) {
+        console.error('Update error:', error);
+        res.status(500).json({ message: 'Error updating event' });
+      }
+      break;
+
+    default:
+      res.setHeader('Allow', ['GET', 'PUT']);
+      res.status(405).end(`Method ${method} Not Allowed`);
   }
 }
