@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import Calendar from '@/components/Calendar';
-import EventModal from '@/components/EventModal';
+import Calendar from '../../components/Calendar';
+import EventModal from '../../components/EventModal';
 import { useEventContext } from '../../contexts/EventContext';
 
 export default function EventsCalendar() {
