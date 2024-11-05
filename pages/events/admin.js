@@ -14,6 +14,10 @@ export default function AdminEvents() {
     try {
       const response = await fetch('/api/events');
       const data = await response.json();
+      console.log('All events:', data.map(event => ({
+        _id: event._id,
+        title: event.title
+      })));
       setEvents(Array.isArray(data) ? data : []);
       
       if (!Array.isArray(data)) {
@@ -45,9 +49,22 @@ export default function AdminEvents() {
       const method = eventData._id ? 'PUT' : 'POST';
       const url = eventData._id ? `/api/events/${eventData._id}` : '/api/events';
       
+      const formattedEventData = {
+        ...eventData,
+        start: new Date(eventData.start).toISOString(),
+        end: new Date(eventData.end).toISOString()
+      };
+
+      console.log('Event data before save:', {
+        id: formattedEventData._id,
+        title: formattedEventData.title,
+        start: formattedEventData.start,
+        end: formattedEventData.end
+      });
+
       const body = method === 'POST' ? 
-        { ...eventData, _id: undefined } : 
-        eventData;
+        { ...formattedEventData, _id: undefined } : 
+        formattedEventData;
 
       const response = await fetch(url, {
         method,
@@ -57,13 +74,23 @@ export default function AdminEvents() {
         body: JSON.stringify(body),
       });
       
-      if (response.ok) {
-        fetchEvents();
-        setIsModalOpen(false);
-        setSelectedEvent(null);
-      } else {
-        console.error('Error response:', await response.text());
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Failed to save event:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorBody: errorText,
+          eventId: eventData._id,
+          method,
+          requestBody: body
+        });
+        alert('Failed to save event. Please try again.');
+        return;
       }
+
+      fetchEvents();
+      setIsModalOpen(false);
+      setSelectedEvent(null);
     } catch (error) {
       console.error('Σφάλμα κατά την αποθήκευση της εκδήλωσης:', error);
     }
