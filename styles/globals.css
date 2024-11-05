@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add any custom styles below */
+.modal-backdrop {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 9999 !important;
+}
+
+.modal-content {
+  position: relative !important;
+  z-index: 10000 !important;
+}
+
+/* Add any other global styles you need */
+body {
+  @apply bg-gray-50;
+}
+
+h1 {
+  @apply text-gray-900;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
