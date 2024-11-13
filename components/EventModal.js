@@ -23,14 +23,14 @@ export default function EventModal() {
             <h2 className="text-xl font-bold mb-4">{selectedEvent.title}</h2>
             <div className="mb-4">
               <p className="mb-2">
-                <span className="font-semibold">Start:</span> {selectedEvent.start}
+                <span className="font-semibold">Από:</span> {selectedEvent.start}
               </p>
               <p className="mb-2">
-                <span className="font-semibold">End:</span> {selectedEvent.end}
+                <span className="font-semibold">Έως:</span> {selectedEvent.end}
               </p>
               {selectedEvent.description && (
                 <div>
-                  <span className="font-semibold">Description:</span>
+                  <span className="font-semibold">Λεπτομέρειες:</span>
                   <div dangerouslySetInnerHTML={{ __html: selectedEvent.description }} />
                 </div>
               )}
@@ -39,7 +39,7 @@ export default function EventModal() {
               onClick={closeModal}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
             >
-              Close
+              Κλείσιμο
             </button>
           </div>
         </div>

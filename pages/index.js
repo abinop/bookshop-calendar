@@ -57,14 +57,14 @@ export default function Home() {
               </h2>
               <div className="space-y-4">
                 <p className="text-gray-700">
-                  <span className="font-medium">Start:</span> {formatDate(selectedEvent.start)}
+                  <span className="font-medium">Από:</span> {formatDate(selectedEvent.start)}
                 </p>
                 <p className="text-gray-700">
-                  <span className="font-medium">End:</span> {formatDate(selectedEvent.end)}
+                  <span className="font-medium">Έως:</span> {formatDate(selectedEvent.end)}
                 </p>
                 {selectedEvent.description && (
                   <div className="text-gray-700">
-                    <span className="font-medium">Description:</span>
+                    <span className="font-medium">Λεπτομέρειες:</span>
                     <div 
                       className="mt-2 prose prose-sm max-w-none prose-a:text-blue-600 prose-a:underline hover:prose-a:text-blue-800" 
                       dangerouslySetInnerHTML={{ __html: selectedEvent.description }} 
@@ -77,7 +77,7 @@ export default function Home() {
                   onClick={closeModal}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
                 >
-                  Close
+                  Κλείσιμο
                 </button>
               </div>
             </div>

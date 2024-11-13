@@ -243,7 +243,7 @@ const BookshopCalendar = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">Description</label>
+                <label className="text-sm font-medium mb-1 block">Λεπτομέρειες</label>
                 <Textarea
                   value={newEvent.description}
                   onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
@@ -251,7 +251,7 @@ const BookshopCalendar = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">Date</label>
+                <label className="text-sm font-medium mb-1 block">Ημερομηνία</label>
                 <Input
                   type="date"
                   value={newEvent.date}
@@ -260,10 +260,10 @@ const BookshopCalendar = () => {
               </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  Cancel
+                  Ακύρωση
                 </Button>
                 <Button onClick={editingEvent ? handleUpdateEvent : handleAddEvent}>
-                  {editingEvent ? 'Update Event' : 'Add Event'}
+                  {editingEvent ? 'Ενημέρωση' : 'Προσθέσε'}
                 </Button>
               </div>
             </div>
