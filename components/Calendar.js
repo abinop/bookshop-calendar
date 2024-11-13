@@ -6,6 +6,12 @@ import { useMediaQuery } from '../hooks/useMediaQuery';
 import { format } from 'date-fns';
 import { el } from 'date-fns/locale';
 
+// Helper function to strip HTML tags
+const stripHtmlTags = (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '');
+};
+
 export default function Calendar({ isAdmin = false, events = [] }) {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const { handleEventClick: contextHandleEventClick } = useEventContext();
@@ -56,13 +62,13 @@ export default function Calendar({ isAdmin = false, events = [] }) {
                 onClick={() => handleEventClick(event)}
                 className="p-4 bg-white rounded-lg shadow hover:bg-gray-50 cursor-pointer"
               >
-                <div className="font-semibold">{event.title}</div>
+                <div className="font-semibold">{stripHtmlTags(event.title)}</div>
                 <div className="text-sm text-gray-600">
                   {format(new Date(event.start), 'EEEE, d MMMM', { locale: el })}
                 </div>
                 {event.description && (
                   <div className="mt-2 text-sm text-gray-500 line-clamp-2">
-                    {event.description}
+                    {stripHtmlTags(event.description)}
                   </div>
                 )}
               </div>
