@@ -41,7 +41,10 @@ export default function AdminEvents() {
       // Format dates for datetime-local input
       const formatDateForInput = (dateStr) => {
         const date = new Date(dateStr);
-        return date.toISOString().slice(0, 16);
+        // Format date to local datetime string
+        return new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
+          .toISOString()
+          .slice(0, 16);
       };
 
       editor.commands.setContent(editingEvent.description || '');
@@ -74,14 +77,16 @@ export default function AdminEvents() {
   };
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleString('el-GR', {
+    const d = new Date(date);
+    return d.toLocaleString('el-GR', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: false,
+      timeZone: 'Europe/Athens'
     });
   };
 
@@ -129,13 +134,21 @@ export default function AdminEvents() {
         : '/api/events';
       
       const method = editingEvent ? 'PUT' : 'POST';
+
+      // Create dates in local timezone
+      const startDate = new Date(formData.start);
+      const endDate = new Date(formData.end);
       
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          start: startDate.toISOString(),
+          end: endDate.toISOString(),
+        }),
       });
 
       if (response.ok) {

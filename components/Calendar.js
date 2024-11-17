@@ -31,7 +31,8 @@ export default function Calendar({ isAdmin = false, events = [] }) {
     return new Date(dateString).toLocaleTimeString('el-GR', {
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: false,
+      timeZone: 'Europe/Athens'
     });
   };
 
