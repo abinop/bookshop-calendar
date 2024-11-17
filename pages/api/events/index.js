@@ -16,13 +16,19 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       const { title, description, start, end } = req.body;
+      
+      // Ensure dates are stored in ISO format
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+
       const result = await db.collection('events').insertOne({
         title,
         description,
-        start: new Date(start),
-        end: new Date(end),
+        start: startDate.toISOString(),
+        end: endDate.toISOString(),
         createdAt: new Date()
       });
+
       return res.status(201).json(result);
     }
   } catch (error) {

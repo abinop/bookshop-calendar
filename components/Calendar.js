@@ -27,6 +27,14 @@ export default function Calendar({ isAdmin = false, events = [] }) {
     });
   };
 
+  const formatEventTime = (dateString) => {
+    return new Date(dateString).toLocaleTimeString('el-GR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  };
+
   if (isMobile) {
     return (
       <div className="space-y-4">
@@ -64,7 +72,7 @@ export default function Calendar({ isAdmin = false, events = [] }) {
               >
                 <div className="font-semibold">{stripHtmlTags(event.title)}</div>
                 <div className="text-sm text-gray-600">
-                  {format(new Date(event.start), 'EEEE, d MMMM', { locale: el })}
+                  {formatEventTime(event.start)}
                 </div>
                 {event.description && (
                   <div className="mt-2 text-sm text-gray-500 line-clamp-2">

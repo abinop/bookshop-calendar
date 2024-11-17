@@ -102,6 +102,23 @@ export default function AdminEvents() {
     }
   };
 
+  const formatTimeForInput = (date) => {
+    if (!date) return '';
+    // Ensure date is treated as local time
+    const d = new Date(date);
+    return d.toLocaleTimeString('el-GR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  };
+
+  const formatDateForInput = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toISOString().split('T')[0];
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
