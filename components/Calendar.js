@@ -99,6 +99,28 @@ export default function Calendar({ isAdmin = false, events = [] }) {
         description: event.extendedProps.description,
         id: event.id
       })}
+      eventTimeFormat={{
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        meridiem: false
+      }}
+      eventContent={(eventInfo) => {
+        return (
+          <div className="flex flex-col gap-1">
+            <div className="text-sm font-medium">
+              {new Date(eventInfo.event.start).toLocaleTimeString('el-GR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+              })}
+            </div>
+            <div className="text-xs">
+              {eventInfo.event.title}
+            </div>
+          </div>
+        );
+      }}
       // ... rest of your existing FullCalendar props
     />
   );
