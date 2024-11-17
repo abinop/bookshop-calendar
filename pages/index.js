@@ -21,13 +21,16 @@ export default function Home() {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString('el-GR', {
+    const date = new Date(dateString);
+    
+    return date.toLocaleString('el-GR', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: false
     });
   };
 
