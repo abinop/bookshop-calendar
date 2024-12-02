@@ -107,7 +107,7 @@ export default function Calendar({ isAdmin = false, events = [] }) {
       }}
       eventContent={(eventInfo) => {
         return (
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 w-full">
             <div className="text-sm font-medium">
               {new Date(eventInfo.event.start).toLocaleTimeString('el-GR', {
                 hour: '2-digit',
@@ -115,7 +115,7 @@ export default function Calendar({ isAdmin = false, events = [] }) {
                 hour12: false
               })}
             </div>
-            <div className="text-xs">
+            <div className="text-xs break-words overflow-hidden">
               {eventInfo.event.title}
             </div>
           </div>
