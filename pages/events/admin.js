@@ -268,35 +268,37 @@ export default function AdminEvents() {
         {/* Events List */}
         <div className="bg-white shadow-sm rounded-lg">
           <ul className="divide-y divide-gray-200">
-            {events.map((event) => (
-              <li key={event._id} className="p-4 hover:bg-gray-50">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-semibold text-gray-900">{event.title}</h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {formatDate(event.start)} - {formatDate(event.end)}
-                    </p>
+            {events
+              .sort((a, b) => new Date(b.start) - new Date(a.start))
+              .map((event) => (
+                <li key={event._id} className="p-4 hover:bg-gray-50">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-semibold text-gray-900">{event.title}</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {formatDate(event.start)} - {formatDate(event.end)}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setEditingEvent(event);
+                          setShowEditModal(true);
+                        }}
+                        className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(event._id)}
+                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        setEditingEvent(event);
-                        setShowEditModal(true);
-                      }}
-                      className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(event._id)}
-                      className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              ))}
           </ul>
         </div>
 
